@@ -20,7 +20,7 @@ df['Local'] = df['Local'].astype('category')
 '''teste de friedman, já que os dados não seguem uma distribuição normal'''
 # Aplicar o teste de Friedman
 grupos_iguais = []
-for local, grupo in df.groupby('Ano'):
+for ano, grupo in df.groupby('Ano'):
     grupo_amostrado = grupo.sample(6, random_state=42)  # Ajuste o random_state para garantir replicabilidade
     grupos_iguais.append(grupo_amostrado['Cianobacteria'])
 
