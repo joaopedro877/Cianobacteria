@@ -1,28 +1,27 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Dec 22 17:33:13 2023
-
-@author: joao
-"""
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
 import numpy as np
+from statsmodels.stats.diagnostic import het_white
 
 
-df=pd.read_csv('/home/joao/encontro_recifal_2024/dados/cianobacteria.csv')
+df=pd.read_csv('/home/joao/encontro_recifal_2024/dados/cianobacteria2.csv')
 df['Ano'] = df['Ano'].astype('category')
 df['Local'] = df['Local'].astype('category')
 
 '''anova de dois fatores'''
 modelo = ols('Cianobacteria ~ C(Ano) + C(Local)', data=df).fit()
-resultado_anova = sm.stats.anova_lm(modelo, typ=3)
+resultado_anova = sm.stats.anova_lm(modelo, typ=2)
 
 print(resultado_anova)
 
-anova_table = sm.stats.anova_lm(modelo, typ=2)
+
+# Realizando o teste de White para heterocedasticidade
+white_test = het_white(modelo.resid, modelo.model.exog)
+labels = ['LM Statistic', 'LM-Test p-value', 'F-Statistic', 'F-Test p-value']
+print(dict(zip(labels, white_test)))
+
 
 # Exibindo a tabela ANOVA
 print(anova_table)
